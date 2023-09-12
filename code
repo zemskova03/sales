@@ -1,0 +1,23 @@
+1.Какая дата соответствует наибольшему количеству продаж?
+  
+select datesold,count(*)from raw_sales
+group by datesold
+order by count desc
+
+2.Узнайте почтовый индекс с самой высокой средней ценой за продажу? (Используя агрегированные функции)
+  
+select postcode,cast(avg(price)as numeric(10,2)) from raw_sales
+group by postcode
+order by avg desc
+
+3.В каком году было зафиксировано наименьшее количество продаж?
+  
+select date_part('year', datesold) as year,count(*) as count from raw_sales
+group by year
+order by count
+  
+4.Используйте функцию window, чтобы вычислить шесть лучших почтовых индексов по цене за год.
+
+ select date_part('year', datesold) as year,postcode,avg(price) over(partition by datesold,postcode) as price
+  from raw_sales
+order by year asc,price asc
